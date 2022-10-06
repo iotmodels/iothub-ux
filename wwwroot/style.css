@@ -1,0 +1,73 @@
+﻿body {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+th, td {
+    text-align:left;
+    padding: 10px
+}
+
+[v-cloak] {
+    display: none;
+}
+
+li.raw {
+    list-style:none
+}
+
+span {
+    margin: 5px
+}
+
+.prop {
+    border: 1px solid grey;
+    width: 500px;
+    padding: 5px;
+    margin: 5px
+}
+
+.prop-name, .prop-value {
+    font-size:larger
+}
+
+.prop-value {
+    font-weight:bold
+}
+
+.prop-desc {
+    padding-top: 15px;
+}
+
+.prop-md {
+    text-align:right;
+    font-size:smaller;
+    font-style:italic
+
+}
+
+.props-metadata {
+    background-color:#ecf6fc;
+    padding:3px;
+    margin:3px
+}
+
+.error {
+    color: red
+}
+.loader {
+    border: 5px solid grey;
+    border-radius: 50%;
+    border-top: 5px solid darkblue;
+    width: 30px;
+    height: 30px;
+    animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
