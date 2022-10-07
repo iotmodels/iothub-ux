@@ -44,7 +44,7 @@ const getDeviceList = (connectionString, cb) => {
       //   d.modelId = await getModelId(connectionString, d.id)
       // }
 
-      console.log(`Found ${devicesInfo.length} registered devices.`)
+      //console.log(`Found ${devicesInfo.length} registered devices.`)
       cb(devicesInfo)
     }
   })

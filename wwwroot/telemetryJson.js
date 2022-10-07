@@ -53,47 +53,6 @@ const start = async () => {
             }
         })
         chart.update()
-        // console.log(messageData)
-        // if (messageData.IotData.properties && messageData.IotData.properties.reported) {
-        //   updateReported(messageData.IotData.properties.reported)
-        //   return
-        // }
-        // if (messageData.IotData.properties && messageData.IotData.properties.desired) {
-        //   updateDesired(messageData.IotData.properties.desired)
-        //   return
-        // }
-    
-        // telNames.forEach(t => {
-        //   if (messageData.IotData[t]) {
-        //     const telemetryValue = messageData.IotData[t]
-        //     myLineChart.data.labels = deviceData.timeData
-        //     deviceData.addDataPoint(messageData.MessageDate, t, telemetryValue)
-        //     const curDataSet = myLineChart.data.datasets.filter(ds => ds.yAxisID === t)
-        //     curDataSet[0].data = deviceData.dataPoints[t]
-        //     myLineChart.update()
-        //   }
-        // })
       }
-
-    // client.on('message', (topic, message) => {
-    //     //console.log(topic)
-    //     const segments = topic.split('/')
-    //     const what = segments[2]
-    //     if (what === 'telemetry') {
-    //         let now = Date.now() - startTime
-    //         const tel = JSON.parse(message)
-    //         Telemetries.map(t => t.name).forEach(t => {
-    //             if (tel[t]) {
-    //                 dataPoints[t].push({x: now, y: tel[t]})
-    //             }
-    //         })
-    //         Object.keys(dataPoints).forEach(k => {               
-    //             if (dataPoints[k].length > 100) {
-    //                 dataPoints[k].shift()
-    //            }
-    //         })
-    //         chart.update()
-    //     }
-    // })
 }
 window.onload = start
