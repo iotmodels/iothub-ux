@@ -19,6 +19,8 @@ const resolveSchema = s => {
 export default {
     data: () => ({
         device: {},
+        deviceId: '',
+        modelId: '',
         properties: [],
         commands: [],
         modelpath: ''
@@ -29,17 +31,22 @@ export default {
     },
     methods: {
         async initModel() {
+            const id = new URLSearchParams(window.location.search).get('device-id')
+            this.deviceId = id
             const dtmi = new URLSearchParams(window.location.search).get('model-id')
+            this.modelId = dtmi
             this.modelpath = `${repoBaseUrl}${dtmiToPath(dtmi)}`
             const model = await (await window.fetch(this.modelpath)).json()
             this.properties = model.contents.filter(c => c['@type'].includes('Property'))
             this.commands = model.contents.filter(c => c['@type'].includes('Command'))
         },
         async fetchData() {
-            const id = new URLSearchParams(window.location.search).get('device-id')
-            const url = `/api/getDeviceTwin?deviceId=${id}`
-            this.device = await (await fetch(url)).json()
-            document.title = this.device.deviceId
+            const url = `/api/getDeviceTwin?deviceId=${this.deviceId}`
+            const deviceTwin = await (await fetch(url)).json()
+            this.device.deviceId = deviceTwin.deviceId
+            this.device.properties = deviceTwin.properties
+            this.device.connectionState = deviceTwin.connectionState
+            document.title = deviceTwin.deviceId
         },
         async handlePropUpdate(name, val, schema) {
             const resSchema = resolveSchema(schema)

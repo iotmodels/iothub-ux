@@ -20,8 +20,8 @@ let Telemetries
 const start = async () => {
 
     const qs =  new URLSearchParams(window.location.search)
-    deviceId = qs.get('id')
-    modelId  = qs.get('modelId')
+    deviceId = qs.get('device-id')
+    modelId  = qs.get('model-id')
    
     const modelpath = `${repoBaseUrl}${dtmiToPath(modelId)}`
     const model = await (await window.fetch(modelpath)).json()
