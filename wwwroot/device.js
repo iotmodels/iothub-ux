@@ -46,7 +46,6 @@ export default {
             console.log('upd', name, val, resSchema)
             this.device.properties.desired[name] = ''
             this.device.properties.reported[name] = ''
-            const url = `/api/Devices/${this.device.deviceId}`
             const desValue = {
                 properties: {
                     desired: {}
@@ -63,18 +62,28 @@ export default {
                 case 'boolean':
                     desiredValue = (val === 'true')
                     break
-                case 'double':
+                    case 'double':
                     desiredValue = parseFloat(val)
                     break
-                default:
-                    console.log('schema serializer not implemented', resSchema)
-                    throw new Error('Schema serializer not implemented for' + Json.stringify(resSchema))
-            }
-            
-            desValue.properties.desired[name] = desiredValue
-            const payload = JSON.stringify(desValue)
+                    default:
+                        console.log('schema serializer not implemented', resSchema)
+                        throw new Error('Schema serializer not implemented for' + Json.stringify(resSchema))
+                    }
+                    
+                    desValue.properties.desired[name] = desiredValue
+                    const payload = JSON.stringify(desValue)
             try {
-                await (await fetch(url, { method: 'POST', body: payload, headers: { 'Content-Type': 'application/json' } }))
+                const url = `/api/updateDeviceTwin`
+                const options = {
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        deviceId: this.device.deviceId,
+                        propertyName: name,
+                        propertyValue: desiredValue
+                    })
+                }
+                await (await fetch(url, options))
                 setTimeout(async () => {
                     await this.fetchData()
                 }, 2000)
