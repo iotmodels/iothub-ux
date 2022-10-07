@@ -20,13 +20,17 @@
             </ul>
         </div>
         <div>
-            <h3>Device Twin</h3>
+            <h3>Properties</h3>
             <ul>
                 <li class="raw" v-for="p in properties">
                     <reported-property v-if="p.writable!=true" :property="p" :device-props="device.properties"></reported-property>
                     <writable-property v-if="p.writable===true" :property="p" :device-props="device.properties" :schema="p.schema" @prop-updated="handlePropUpdate"></writable-property>
                 </li>
             </ul>
+        </div>
+        <div class="telemetryDiv">
+            <h3>Telemetry</h3>
+            <iframe :src="'telemetryJson.html?id='+ device.deviceId +'&modelId=' + device.modelId" width="500px" height="550px"></iframe> 
         </div>
     </div>
 
