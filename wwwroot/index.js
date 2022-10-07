@@ -1,108 +1,44 @@
-/* global connectionstring, $ */
-(() => {
-  function createVueApp () {
-    let intervalId
-    let asc = 1
-    const oneSecond = 1000
-    const defaultRefreshSeconds = 10
-    const defaultRefreshInterval = defaultRefreshSeconds * oneSecond
+const isBuffer = obj => {
+    return obj != null && obj.constructor != null &&
+        typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
 
-    const app = new Vue({
-      el: '#deviceList',
-      data: {
-        hub: 'not set',
+export default {
+    data: () => ({
+        hostName: '',
+        config: '',
         devices: [],
-        deviceStatus: {},
-        elapsed: defaultRefreshSeconds,
-        refresh: defaultRefreshInterval,
-        refreshEnabled: false,
-        loading: false
-      },
-      methods: {
-        sortBy: function (by) {
-          if (this.devices.length > 0) {
-            this.devices.sort((a, b) => a[by] > b[by] ? asc : -asc)
-            asc = -asc
-          }
+        loading: true,
+        error: '',
+        connected: false
+    }),
+    created() {
+        this.fetchData()
+    },
+    methods: {
+        async fetchData() {
+            const deviceList = await (await window.fetch('/api/getDevices')).json()
+            this.devices = deviceList
         },
-        updateRefresh: function (event) {
-          let interval = parseInt(window.prompt('Seconds to refresh', this.refresh / oneSecond), 10) * oneSecond
-          if (isNaN(interval)) interval = defaultRefreshInterval
-          this.refresh = interval
+        getDeviceUrl(d) {
+            window.location.href = `device.html?id=${d.deviceId}&model-id=${d.modelId}`
         },
-        refreshCount: function () {
-          this.deviceStatus.Disconnected = this.devices.filter(d => d.state === 'Disconnected').length
-          this.deviceStatus.Connected = this.devices.filter(d => d.state === 'Connected').length
-          this.deviceStatus.Total = this.devices.length
-          this.loading = false
+        removeDevice(did) {
+            const topic = `registry/${did}/status`
+            client.publish(topic, '', { retain: true, qos: 1 })
+            const dix = this.devices.findIndex(d => d.deviceId === did)
+            this.devices.splice(dix, 1)
         },
-        refreshDevices: async function () {
-          this.loading = true
-          window.fetch('/api/getDevices')
-            .then(resp => resp.json())
-            .then(devicesDto => {
-              devicesDto.forEach(d => {
-                window.fetch(`/api/getModelId?deviceId=${d.id}`)
-                  .then(resp => resp.json())
-                  .then(m => {
-                    const u = new URL(m)
-                    d.modelId = u.protocol + u.pathname
-                  })
-              })
-              this.devices = devicesDto
-              this.refreshCount()
-            })
+        disconnect() {
+            const mqttCreds = JSON.parse(window.localStorage.getItem('mqttCreds'))
+            mqttCreds.reconnect = false
+            window.localStorage.setItem('mqttCreds', JSON.stringify(mqttCreds))
+            this.connected = false
+            client.end()
         },
-        postConnectionString: async function (event) {
-          console.log(connectionstring.value)
-          if (connectionstring.value.length > 0) {
-            await window.fetch('/api/connection-string',
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `connectionstring=${encodeURIComponent(connectionstring.value)}`
-              })
-              .then(resp => resp.json())
-              .then(text => { this.hub = text })
-            await this.refreshDevices()
-            $('#formConnectionString').collapse('hide')
-          }
-        },
-        toggleAutoRefresh: function (event) {
-          this.refreshEnabled = event.srcElement.checked
-          if (this.refreshEnabled) {
-            let lastRefreshTime = new Date()
-            intervalId = setInterval(async () => {
-              const currentTime = new Date()
-              const elapsedTime = currentTime - lastRefreshTime
-              this.elapsed = Math.round((this.refresh - Math.abs(elapsedTime)) / oneSecond)
-              if (elapsedTime > this.refresh) {
-                console.log('Refresh timer fired.')
-                await this.refreshDevices()
-                lastRefreshTime = currentTime
-              }
-            }, oneSecond)
-          } else {
-            clearInterval(intervalId)
-          }
+        formatDate(d) {
+            if (d === '0001-01-01T00:00:00Z') return ''
+            return moment(d).fromNow()
         }
-      }
-    })
-    return app
-  }
-
-  const app = createVueApp()
-
-  window.fetch('/api/connection-string')
-    .then(resp => resp.json())
-    .then(async (json) => {
-      if (json.length < 20) {
-        app.hub = '<not configured>'
-      } else {
-        app.hub = json
-        await app.refreshDevices()
-      }
-    })
-})()
+    }
+}

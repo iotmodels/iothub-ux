@@ -54,9 +54,10 @@ router.post('/connection-string', (req, res) => {
   }
 })
 
-router.get('/getDevices', (req, res) => {
+router.get('/getDevices', async (req, res) => {
   if (connectionString.length > 0) {
-    hub.getDeviceList(connectionString, list => res.json(list))
+    const devices = await hub.getDeviceList(connectionString)
+    res.json(devices.result)
   } else {
     res.json({})
   }
