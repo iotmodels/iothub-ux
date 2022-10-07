@@ -8,13 +8,15 @@ const repo = require('./app.modelRepo.js')
 const http = require('http')
 const WebSocket = require('ws')
 const EventHubReader = require('./app.eventHub')
+const { exit } = require('process')
 
 const port = 3000
 
 let connectionString = process.env.IOTHUB_CONNECTION_STRING
 
 if (!connectionString || connectionString.length < 10) {
-  console.log('IOTHUB_CONNECTION_STRING not found')
+  console.error('IOTHUB_CONNECTION_STRING not found')
+  exit()
 }
 
 const app = express()
