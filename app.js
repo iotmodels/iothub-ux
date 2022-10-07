@@ -3,7 +3,6 @@ const path = require('path')
 
 const bodyParser = require('body-parser')
 const hub = require('./app.iothub.js')
-const repo = require('./app.modelRepo.js')
 
 const http = require('http')
 const WebSocket = require('ws')
@@ -32,6 +31,11 @@ const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })
 
 router.get('/', (req, res, next) => res.sendFile('index.html', { root: path.join(__dirname, 'wwwroot/index.html') }))
+
+router.get('/hubInfo', (req, res) => {
+  const [HostName] = connectionString.split(';')
+  res.json(HostName.split('=')[1])
+})
 
 router.get('/connection-string', (req, res) => {
   if (connectionString && connectionString.length > 0) {
@@ -66,20 +70,6 @@ router.get('/getDevices', async (req, res) => {
 router.get('/getDeviceTwin', async (req, res) => {
   const result = await hub.getDeviceTwin(connectionString, req.query.deviceId)
   res.json(result.responseBody)
-})
-
-router.get('/getModelId', async (req, res) => {
-  const result = await hub.getModelId(connectionString, req.query.deviceId)
-  res.json(result)
-})
-
-router.get('/getModel', async (req, res) => {
-  const result = await repo.getModel(connectionString, req.query.modelId, req.query.deviceId)
-  if (result) {
-    return res.json(result)
-  } else {
-    return res.json('')
-  }
 })
 
 router.post('/updateDeviceTwin', async (req, res) => {

@@ -17,6 +17,7 @@ export default {
     },
     methods: {
         async fetchData() {
+            this.hostName = await (await window.fetch('/api/hubInfo')).json()
             const deviceList = await (await window.fetch('/api/getDevices')).json()
             this.devices = deviceList
         },

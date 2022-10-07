@@ -1,6 +1,6 @@
 ﻿const repoBaseUrl = 'https://iotmodels.github.io/dmr/' // 'https://devicemodels.azure.com'
 const dtmiToPath = function (dtmi) {
-    return `/${dtmi.toLowerCase().replace(/:/g, '/').replace(';', '-')}.json`
+    return `${dtmi.toLowerCase().replace(/:/g, '/').replace(';', '-')}.json`
 }
 
 const isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
@@ -18,6 +18,7 @@ const resolveSchema = s => {
 
 export default {
     data: () => ({
+        hostName: '',
         device: {},
         deviceId: '',
         modelId: '',
@@ -25,12 +26,13 @@ export default {
         commands: [],
         modelpath: ''
     }),
-    created() {
-        this.initModel()
-        this.fetchData()
+    async created() {
+        await this.initModel()
+        await this.fetchData()
     },
     methods: {
         async initModel() {
+            this.hostName = await (await window.fetch('/api/hubInfo')).json()
             const id = new URLSearchParams(window.location.search).get('device-id')
             this.deviceId = id
             const dtmi = new URLSearchParams(window.location.search).get('model-id')
@@ -43,6 +45,7 @@ export default {
         async fetchData() {
             const url = `/api/getDeviceTwin?deviceId=${this.deviceId}`
             const deviceTwin = await (await fetch(url)).json()
+            this.device.modelId = this.modelId
             this.device.deviceId = deviceTwin.deviceId
             this.device.properties = deviceTwin.properties
             this.device.connectionState = deviceTwin.connectionState
