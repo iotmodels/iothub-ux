@@ -4,6 +4,18 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+    {
+        "name": "Launch Program",
+        "program": "${workspaceFolder}/app.js",
+        "request": "launch",
+        "skipFiles": [
+            "node_modules/**"
+        ],
+        "type": "node",
+        "env": {
+            "IOTHUB_CONNECTION_STRING" : "HostName=rido.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=7Fnf/DRygqQ6WxK77+5pIev5McFkfQfE53m2Oxav4Yk="
+        }
+    },
         {
             "type": "msedge",
             "request": "launch",

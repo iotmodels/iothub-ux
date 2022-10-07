@@ -15,7 +15,7 @@
             <h3>Commands</h3>
             <ul>
                 <li class="raw" v-for="c in commands">
-                    <command :command="c" :device-id="gv(device,'deviceId')"></command>
+                    <command :command="c" :device-id="gv(device,'deviceId')" @command-invoked="onCommand" @clear-resp="c.responseMsg=''" :response-msg="c.responseMsg"></command>
                 </li>
             </ul>
         </div>
@@ -32,9 +32,9 @@
 
     <script type="module">
         import device from './device.js'
-        import Command from './Command.js'
-        import ReportedProperty from './ReportedProperty.js'
-        import WritableProperty from './WritableProperty.js'
+        import Command from './comps/Command.js'
+        import ReportedProperty from './comps/ReportedProperty.js'
+        import WritableProperty from './comps/WritableProperty.js'
         import DeviceHeader from './DeviceHeader.js'
         const { createApp } = Vue
         const app = createApp(device)

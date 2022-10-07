@@ -82,6 +82,23 @@ export default {
                 console.log(e)
             }
         },
+        async onCommand (cmdName, cmdReq) {
+            const cmd = this.commands.filter(c => c.name === cmdName)[0]
+            cmd.responseMsg = ''
+            const url = `/api/invokeCommand`
+            const options = {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ deviceId : this.device.deviceId, commandName: cmdName, payload: cmdReq })
+              }
+            const cmdResponse = await (await fetch(url, options)).json()
+            cmd.responseMsg = cmdResponse.payload
+            //const topic = `device/${this.device.deviceId}/commands/${cmdName}`
+            //client.publish(topic,JSON.stringify(cmdReq), {qos:1, retain: false})            
+        },
         formatDate(d) {
             if (d === '0001-01-01T00:00:00Z') return ''
             return moment(d).fromNow()
