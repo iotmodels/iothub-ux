@@ -22,7 +22,7 @@ const start = async () => {
     modelId  = qs.get('model-id')
    
     const protocol = document.location.protocol.startsWith('https') ? 'wss://' : 'ws://'
-    const webSocket = new window.WebSocket(protocol + window.location.host)
+    const webSocket = new window.WebSocket(protocol + window.location.host + '/?did=' + deviceId)
 
     const modelpath = `${repoBaseUrl}${dtmiToPath(modelId)}`
     const model = await (await window.fetch(modelpath)).json()
@@ -46,14 +46,16 @@ const start = async () => {
     
     webSocket.onmessage = (message) => {
         const messageData = JSON.parse(message.data)
-        let now = Date.now() - startTime
-        const tel = messageData.IotData //JSON.parse(message)
-        Telemetries.map(t => t.name).forEach(t => {
-            if (tel[t]) {
-                dataPoints[t].push({x: now, y: tel[t]})
-            }
-        })
-        chart.update()
+        if (deviceId === messageData.DeviceId) {
+            let now = Date.now() - startTime
+            const tel = messageData.IotData //JSON.parse(message)
+            Telemetries.map(t => t.name).forEach(t => {
+                if (tel[t]) {
+                    dataPoints[t].push({x: now, y: tel[t]})
+                }
+            })
+            chart.update()
+        }
       }
 }
 window.onload = start
