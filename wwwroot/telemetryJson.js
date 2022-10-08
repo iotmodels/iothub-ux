@@ -1,7 +1,5 @@
 const gbid = id => document.getElementById(id)
 
-const protocol = document.location.protocol.startsWith('https') ? 'wss://' : 'ws://'
-const webSocket = new window.WebSocket(protocol + window.location.host)
 
 const repoBaseUrl = 'https://iotmodels.github.io/dmr/' // 'https://devicemodels.azure.com'
 const dtmiToPath = function (dtmi) {
@@ -23,6 +21,9 @@ const start = async () => {
     deviceId = qs.get('device-id')
     modelId  = qs.get('model-id')
    
+    const protocol = document.location.protocol.startsWith('https') ? 'wss://' : 'ws://'
+    const webSocket = new window.WebSocket(protocol + window.location.host)
+
     const modelpath = `${repoBaseUrl}${dtmiToPath(modelId)}`
     const model = await (await window.fetch(modelpath)).json()
 

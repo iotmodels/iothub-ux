@@ -12,8 +12,8 @@ export default {
         error: '',
         connected: false
     }),
-    created() {
-        this.fetchData()
+    async created() {
+        await this.fetchData()
     },
     methods: {
         async fetchData() {
