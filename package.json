@@ -18,5 +18,11 @@
     "moment": "^2.27.0",
     "replace-string": "^3.1.0",
     "ws": "^7.3.1"
+  },
+  "devDependencies": {
+    "standard": "^17.0.0"
+  },
+  "standard" : {
+    "globals" : ["moment", "TimeChart", "_"]
   }
 }

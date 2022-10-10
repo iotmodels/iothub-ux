@@ -26,7 +26,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/api', router)
 app.use(express.static('wwwroot'))
 
-
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })
 
@@ -108,8 +107,8 @@ wss.on('connection', (ws, req) => {
 
 ;(async () => {
   await eventHubReader.startReadMessage((message, date, deviceId) => {
-     // console.log(deviceId)
-     // console.log(message)
+    // console.log(deviceId)
+    // console.log(message)
     const payload = {
       IotData: message,
       MessageDate: date || Date.now().toISOString(),
@@ -117,9 +116,9 @@ wss.on('connection', (ws, req) => {
     }
 
     if (devicesToListen.indexOf(deviceId) > -1) {
-      //console.log(payload)
+      // console.log(payload)
       wss.clients.forEach((client) => {
-        //console.log(client)
+        // console.log(client)
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(payload))
         }
