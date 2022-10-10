@@ -1,6 +1,6 @@
 ﻿export default {
-    props: ['telemetry', 'telemetryValues'],
-    template: `
+  props: ['telemetry', 'telemetryValues'],
+  template: `
     <table>
         <thead>
             <tr>

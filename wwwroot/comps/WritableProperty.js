@@ -1,32 +1,31 @@
 ﻿export default {
-    props: ['deviceProps', 'property', 'schema'],
-    emits: ['propUpdated'],
-    methods: {
-        gv(object, string, defaultValue = '') {
-            // https://stackoverflow.com/questions/70283134
-            return _.get(object, string, defaultValue)
-        },
-        getPropColorState(name) {
-            const desVal = this.gv(this.deviceProps, 'desired.' + name)
-            const repAck = this.gv(this.deviceProps, 'reported.' + name)
-            if (repAck.value)
-            {
-                if (desVal.toString() !== repAck.value.toString()) return 'lightgrey' 
-                if (repAck.ac === 200) return 'lightgreen'
-                if (repAck.ac === 203 || repAck.ac === 0) return 'silver'
-            }
-            return 'lightpink'
-        },
-        updateProp() {
-            const input = document.getElementById('in-' + this.property.name)
-            this.$emit('propUpdated', this.property.name, input.value, this.schema)
-        },
-        formatDate(d) {
-            if (d === '0001-01-01T00:00:00Z') return ''
-            return moment(d).fromNow()
-        }
+  props: ['deviceProps', 'property', 'schema'],
+  emits: ['propUpdated'],
+  methods: {
+    gv (object, string, defaultValue = '') {
+      // https://stackoverflow.com/questions/70283134
+      return _.get(object, string, defaultValue)
     },
-    template: `
+    getPropColorState (name) {
+      const desVal = this.gv(this.deviceProps, 'desired.' + name)
+      const repAck = this.gv(this.deviceProps, 'reported.' + name)
+      if (repAck.value) {
+        if (desVal.toString() !== repAck.value.toString()) return 'lightgrey'
+        if (repAck.ac === 200) return 'lightgreen'
+        if (repAck.ac === 203 || repAck.ac === 0) return 'silver'
+      }
+      return 'lightpink'
+    },
+    updateProp () {
+      const input = document.getElementById('in-' + this.property.name)
+      this.$emit('propUpdated', this.property.name, input.value, this.schema)
+    },
+    formatDate (d) {
+      if (d === '0001-01-01T00:00:00Z') return ''
+      return moment(d).fromNow()
+    }
+  },
+  template: `
         <div class="prop">
             <div class="prop-desc" v-if="property.description">
                 {{property.description}}
