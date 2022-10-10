@@ -11,7 +11,7 @@ const { exit } = require('process')
 
 const port = 3000
 
-let connectionString = process.env.IOTHUB_CONNECTION_STRING
+const connectionString = process.env.IOTHUB_CONNECTION_STRING
 
 if (!connectionString || connectionString.length < 10) {
   console.error('IOTHUB_CONNECTION_STRING not found')
@@ -34,27 +34,6 @@ router.get('/', (req, res, next) => res.sendFile('index.html', { root: path.join
 router.get('/hubInfo', (req, res) => {
   const [HostName] = connectionString.split(';')
   res.json(HostName.split('=')[1])
-})
-
-router.get('/connection-string', (req, res) => {
-  if (connectionString && connectionString.length > 0) {
-    const hubRegex = /(?<=HostName=).*(?=;SharedAccessKeyName)/i.exec(connectionString)
-    const hubName = hubRegex.length > 0 ? hubRegex[0] : ''
-    res.json(hubName)
-  } else {
-    res.json('not configured')
-  }
-})
-
-router.post('/connection-string', (req, res) => {
-  connectionString = req.body.connectionstring
-  if (connectionString && connectionString.length > 0) {
-    const hubRegex = /(?<=HostName=).*(?=;SharedAccessKeyName)/i.exec(connectionString)
-    const hubName = hubRegex.length > 0 ? hubRegex[0] : ''
-    res.json(hubName)
-  } else {
-    res.json('not configured')
-  }
 })
 
 router.get('/getDevices', async (req, res) => {
