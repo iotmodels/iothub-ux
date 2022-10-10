@@ -24,9 +24,9 @@ export default {
         getDeviceUrl(d) {
             window.location.href = `device.html?id=${d.deviceId}&model-id=${d.modelId}`
         },
-        removeDevice(did) {
-            const topic = `registry/${did}/status`
-            client.publish(topic, '', { retain: true, qos: 1 })
+        async removeDevice(did) {
+            const res = await (await window.fetch('/api/removeDevice?deviceId=' + did))
+            console.log(res)
             const dix = this.devices.findIndex(d => d.deviceId === did)
             this.devices.splice(dix, 1)
         },

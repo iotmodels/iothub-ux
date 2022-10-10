@@ -77,6 +77,11 @@ router.post('/updateDeviceTwin', async (req, res) => {
   res.json(result.responseBody)
 })
 
+router.get('/removeDevice', async (req, res) => {
+  const result = await hub.removeDevice(connectionString, req.query.deviceId)
+  res.json(result.responseBody)
+})
+
 router.post('/invokeCommand', async (req, res) => {
   const result = await hub.invokeDeviceMethod(
     connectionString,

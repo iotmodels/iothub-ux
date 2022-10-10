@@ -1,5 +1,4 @@
 const hub = require('azure-iothub')
-const hubClient = require('azure-iothub').Client
 
 const getDeviceList = async (connectionString) => {
   const registry = hub.Registry.fromConnectionString(connectionString)
@@ -25,9 +24,15 @@ const updateDeviceTwin = async (connectionString, deviceId, propertyName, proper
 }
 
 const invokeDeviceMethod = async (connectionString, deviceId, commandName, commandPayload) => {
-  const client = hubClient.fromConnectionString(connectionString)
-  const result = await client.invokeDeviceMethod(deviceId, { methodName: commandName, payload: commandPayload })
+  const client = hub.Client.fromConnectionString(connectionString)
+  const result = await client.invokeDeviceMethod(deviceId, { methodName: commandName, payload: commandPayload, connectionTimeoutInSeconds: 10, responseTimeoutInSeconds: 60 })
   return result.result
 }
 
-module.exports = { getDeviceList, getDeviceTwin, updateDeviceTwin, invokeDeviceMethod }
+const removeDevice = async (connectionString, deviceId) => {
+  const client = hub.Registry.fromConnectionString(connectionString)
+  const result = await client.delete(deviceId)
+  return result
+}
+
+module.exports = { getDeviceList, getDeviceTwin, updateDeviceTwin, invokeDeviceMethod, removeDevice }
