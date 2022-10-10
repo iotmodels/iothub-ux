@@ -9,7 +9,7 @@ const WebSocket = require('ws')
 const EventHubReader = require('./app.eventHub')
 const { exit } = require('process')
 
-const port = 3000
+const port = process.env.PORT || 3000
 
 const connectionString = process.env.IOTHUB_CONNECTION_STRING
 
