@@ -2,7 +2,7 @@ const hub = require('azure-iothub')
 
 const getDeviceList = async (connectionString) => {
   const registry = hub.Registry.fromConnectionString(connectionString)
-  const queryText = 'select deviceId, modelId, connectionState, lastActivityTime   from devices where capabilities.iotEdge != true'
+  const queryText = 'select deviceId, modelId, connectionState, lastActivityTime from devices where capabilities.iotEdge != true'
   const query = registry.createQuery(queryText)
   const devices = await query.nextAsTwin()
   return devices
