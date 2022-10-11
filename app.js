@@ -12,11 +12,15 @@ const { exit } = require('process')
 const port = process.env.PORT || 3000
 
 const connectionString = process.env.IOTHUB_CONNECTION_STRING
+const eventHubConsumerGroup = process.env.EVENTHUB_CONSUMER_GROUP || '$Default'
 
 if (!connectionString || connectionString.length < 10) {
   console.error('IOTHUB_CONNECTION_STRING not found')
   exit()
 }
+
+const [HostName] = connectionString.split(';')
+const hubName = HostName.split('=')[1]
 
 const app = express()
 const router = express.Router()
@@ -32,8 +36,7 @@ const wss = new WebSocket.Server({ server })
 router.get('/', (req, res, next) => res.sendFile('index.html', { root: path.join(__dirname, 'wwwroot/index.html') }))
 
 router.get('/hubInfo', (req, res) => {
-  const [HostName] = connectionString.split(';')
-  res.json(HostName.split('=')[1])
+  res.json(hubName)
 })
 
 router.get('/getDevices', async (req, res) => {
@@ -70,10 +73,9 @@ router.post('/invokeCommand', async (req, res) => {
   res.json(result)
 })
 
-const eventHubConsumerGroup = 'node-web-chart'
 const eventHubReader = new EventHubReader(connectionString, eventHubConsumerGroup)
 
-server.listen(port, () => console.log(`App listening on port ${port}`))
+server.listen(port, () => console.log(`App listening on port ${port} | Hub: ${hubName} | ConsumerGroup: ${eventHubConsumerGroup}`))
 
 const devicesToListen = []
 
