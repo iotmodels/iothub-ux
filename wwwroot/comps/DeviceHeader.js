@@ -2,7 +2,7 @@
   props: ['device', 'modelpath', 'hostname'],
   methods: {
     formatDate (d) {
-      if (d === '0001-01-01T00:00:00Z') return ''
+      if (d === 'undefined' || d === '0001-01-01T00:00:00.0000000Z') return ''
       return moment(d).fromNow()
     }
   },
