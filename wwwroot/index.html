@@ -11,7 +11,7 @@
 </head>
 <body>
     <div id="app">
-        <h1>[IotHub UX] {{hostName}}</h1>
+        <h1>[IoTHub UX] {{hostName}}</h1>
         <table>
             <thead>
                 <tr>
@@ -26,7 +26,7 @@
                     <td><a :href="'device.html?device-id=' + d.deviceId + '&model-id=' + d.modelId">{{d.deviceId}}</a></td>
                     <td :style="{color: d.connectionState === 'Connected' ? 'green' : 'red'}">{{d.connectionState}}</td>
                     <td>{{d.modelId}}</td>
-                    <td>{{formatDate(d.when)}}</td>
+                    <td>{{formatDate(d.lastActivityTime)}}</td>
                     <td><button @click="removeDevice(d.deviceId)">delete</button></td>
                 </tr>
             </tbody>

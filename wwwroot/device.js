@@ -48,6 +48,7 @@ export default {
       this.device.modelId = this.modelId
       this.device.deviceId = deviceTwin.deviceId
       this.device.properties = deviceTwin.properties
+      this.device.lastActivityTime = deviceTwin.lastActivityTime
       this.device.connectionState = deviceTwin.connectionState
       document.title = deviceTwin.deviceId
     },

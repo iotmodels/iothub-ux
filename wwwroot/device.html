@@ -10,7 +10,7 @@
 </head>
 <body>
     <div id="app" v-cloak>
-        <device-header :device="device" ></device-header>
+        <device-header :device="device" :modelpath="modelpath" :hostname="hostName"></device-header>
         <div>
             <h3>Commands</h3>
             <ul>
@@ -39,7 +39,7 @@
         import Command from './comps/Command.js'
         import ReportedProperty from './comps/ReportedProperty.js'
         import WritableProperty from './comps/WritableProperty.js'
-        import DeviceHeader from './DeviceHeader.js'
+        import DeviceHeader from './comps/DeviceHeader.js'
         const { createApp } = Vue
         const app = createApp(device)
         app.component('Command', Command)

@@ -14,7 +14,7 @@ export default {
     async fetchData () {
       this.hostName = await (await window.fetch('/api/hubInfo')).json()
       const deviceList = await (await window.fetch('/api/getDevices')).json()
-      this.devices = deviceList
+      this.devices = deviceList.sort((a, b) => a.lastActivityTime < b.lastActivityTime ? 1 : -1)
     },
     getDeviceUrl (d) {
       window.location.href = `device.html?id=${d.deviceId}&model-id=${d.modelId}`

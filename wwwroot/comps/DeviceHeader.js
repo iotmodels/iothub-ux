@@ -1,5 +1,5 @@
 ﻿export default {
-  props: ['device', 'modelPath', 'hostName'],
+  props: ['device', 'modelpath', 'hostname'],
   methods: {
     formatDate (d) {
       if (d === '0001-01-01T00:00:00Z') return ''
@@ -8,7 +8,7 @@
   },
   template: `
         <div>
-        <h1>{{device.deviceId}}@{{hostName}}</h1>
+        <h2>{{device.deviceId}}@{{hostname}}</h2>
         <div>
             <span :style="{color: device.connectionState === 'Connected' ? 'green' : 'red'}">{{device.connectionState}} </span>
             <span>-</span>
