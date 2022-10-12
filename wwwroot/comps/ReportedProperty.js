@@ -12,7 +12,7 @@
   },
   template: `
     <div class="prop">
-        <div class="bold">{{property.name}}</div>
+        <div class="bold">[r] {{property.name}}</div>
         <div class="prop-desc" v-if="property.description">
             {{property.description.en || property.description }}
         </div>

@@ -27,7 +27,7 @@
   },
   template: `
         <div class="prop">
-            <div class="bold">{{property.name}}</div>
+            <div class="bold">[w] {{property.name}}</div>
             <span class="prop-name" :title="property.name">{{property.name}} [{{schema}}]</span>
             <span class="prop-value">{{gv(deviceProps, 'reported.' + property.name + '.value')}}</span>
             desired
