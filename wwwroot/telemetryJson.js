@@ -34,8 +34,10 @@ const start = async () => {
   const startTime = Date.now()
   const chart = new TimeChart(el, {
     series,
-    lineWidth: 5,
-    baseTime: startTime
+    lineWidth: 3,
+    baseTime: startTime,
+    legend: false,
+    tooltip: { enabled: true }
   })
 
   webSocket.onmessage = (message) => {

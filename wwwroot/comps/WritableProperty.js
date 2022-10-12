@@ -27,14 +27,15 @@
   },
   template: `
         <div class="prop">
-            <div class="prop-desc" v-if="property.description">
-                {{property.description}}
-            </div>
+            <div class="bold">{{property.name}}</div>
             <span class="prop-name" :title="property.name">{{property.name}} [{{schema}}]</span>
             <span class="prop-value">{{gv(deviceProps, 'reported.' + property.name + '.value')}}</span>
             desired
             <input size="1" :value="gv(deviceProps, 'desired.' + property.name)" type="text" :id="'in-' + property.name" />
             <button @click="updateProp()">Update</button> 
+            <div class="prop-desc" v-if="property.description">
+              {{property.description.en || property.description}}
+            </div>
             <div class="props-metadata" :style="{backgroundColor: getPropColorState(property.name)}">
                 <div class="prop-md">
                     <span>status:</span>

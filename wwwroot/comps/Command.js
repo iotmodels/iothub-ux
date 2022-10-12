@@ -15,6 +15,8 @@ export default {
         return null
       } else if (isObject(s) && s['@type'] === 'Enum') {
         return s.valueSchema
+      } else if (isObject(s) && s['@type'] === 'Object') {  
+        return 'object'
       } else {
         return s
       }
@@ -27,6 +29,8 @@ export default {
           reqValue = parseInt(this.request)
         } else if (reqSchema === 'boolean') {
           reqValue = Boolean(this.request)
+        } else if (reqSchema === 'object') {
+          reqValue = JSON.parse(this.request)
         } else {
           reqValue = this.request
         }
@@ -38,14 +42,18 @@ export default {
     }
   },
   template: `
-        <div :title="command.name">{{command.displayName || command.name}}</div>
+        <div class="bold">{{command.name}}</div>
+        
         <div v-if="command.request">
-            <div>{{command.request.name || '' }} <i>[{{resolveSchema(command.request.schema)}}]</i></div>
+            <div>{{command.request.name || '' }} <i :title="JSON.stringify(command.request.schema)">[{{resolveSchema(command.request.schema)}}]</i></div>
             <textarea v-model="request">
             </textarea>
         </div>
         <br />
         <button @click="invoke()">invoke</button> <a @click="clearResp()" href="#">clear</a>
+        <div class="prop-desc" v-if="command.description">
+          {{command.description.en || command.description }}
+        </div>
         <div v-if="command.response">
             <pre>{{responseMsg}}</pre>
         </div>

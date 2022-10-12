@@ -3,18 +3,9 @@ const dtmiToPath = function (dtmi) {
   return `${dtmi.toLowerCase().replace(/:/g, '/').replace(';', '-')}.json`
 }
 
-const isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
 
-const resolveSchema = s => {
-  if (!isObject(s) && s.startsWith('dtmi:')) {
-    console.log('not supported schema', s)
-    return null
-  } else if (isObject(s) && s['@type'] === 'Enum') {
-    return s.valueSchema
-  } else {
-    return s
-  }
-}
+
+
 
 export default {
   data: () => ({
@@ -24,6 +15,7 @@ export default {
     modelId: '',
     properties: [],
     commands: [],
+    schemas: [],
     modelpath: ''
   }),
   async created () {
@@ -41,6 +33,7 @@ export default {
       const model = await (await window.fetch(this.modelpath)).json()
       this.properties = model.contents.filter(c => c['@type'].includes('Property'))
       this.commands = model.contents.filter(c => c['@type'].includes('Command'))
+      this.schemas = model.schemas
     },
     async fetchData () {
       const url = `/api/getDeviceTwin?deviceId=${this.deviceId}`
@@ -53,7 +46,7 @@ export default {
       document.title = deviceTwin.deviceId
     },
     async handlePropUpdate (name, val, schema) {
-      const resSchema = resolveSchema(schema)
+      const resSchema = this.resolveSchema(schema)
       console.log('upd', name, val, resSchema)
       this.device.properties.desired[name] = ''
       this.device.properties.reported[name] = ''
@@ -106,18 +99,32 @@ export default {
       const cmd = this.commands.filter(c => c.name === cmdName)[0]
       cmd.responseMsg = ''
       const url = '/api/invokeCommand'
+      const request = { deviceId: this.device.deviceId, commandName: cmdName, payload: cmdReq }
       const options = {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ deviceId: this.device.deviceId, commandName: cmdName, payload: cmdReq })
+        body: JSON.stringify(request)
       }
       const cmdResponse = await (await fetch(url, options)).json()
       cmd.responseMsg = cmdResponse.payload
       // const topic = `device/${this.device.deviceId}/commands/${cmdName}`
       // client.publish(topic,JSON.stringify(cmdReq), {qos:1, retain: false})
+    },
+    resolveSchema (s) {
+      const isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
+      if (!isObject(s) && s.startsWith('dtmi:')) {
+        const schema = this.schemas.filter(i => i['@id'] === s)[0]
+        return schema.valueSchema
+      } else if (isObject(s) && s['@type'] === 'Enum') {
+        return s.valueSchema
+      } else if (isObject(s) && s['@type'] === 'Object') {
+        return 'object'
+      } else {
+        return s
+      }
     },
     formatDate (d) {
       if (d === '0001-01-01T00:00:00.0000000Z') return ''

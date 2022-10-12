@@ -103,3 +103,6 @@ pre {
     top: 120px;
     left: 610px
 }
+.bold {
+    font-weight: bold;
+}
