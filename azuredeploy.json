@@ -12,7 +12,7 @@
             "type": "string",
             "defaultValue" : "$Default",
             "metadata": {
-                "description": "Consumer Group to read values from"
+                "description": "Consumer Group to read values from, eg: $Default"
             }
         }
     },
