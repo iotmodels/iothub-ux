@@ -3,8 +3,15 @@ name: Docker Image CI
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - '*.js'
+      - 'wwwroot/*'
+
   pull_request:
     branches: [ "master" ]
+    paths:
+      - '*.js'
+      - 'wwwroot/*'
 
 jobs:
 

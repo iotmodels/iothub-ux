@@ -14,6 +14,13 @@
             "metadata": {
                 "description": "Consumer Group to read values from, eg: $Default"
             }
+        },
+        "dnsPrefix" : {
+            "type" : "string",
+            "defaultValue": "iothubux1",
+            "metadata": {
+                "description" : "DNS Prefix."
+            }
         }
     },
     "functions": [],
@@ -60,7 +67,7 @@
             "osType": "Linux",
             "ipAddress": {
                 "type": "Public",
-                "dnsNameLabel" : "[concat('iothubux', add(copyIndex(), 1))]",
+                "dnsNameLabel" : "[parameters('dnsPrefix')]",
                 "ports": [
                     {
                         "protocol": "TCP",
