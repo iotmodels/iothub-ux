@@ -19,14 +19,14 @@
     "functions": [],
     "variables": {},
     "resources": [{
-        "name": "containerGroup1",
+        "name": "IoTHub UX Web App",
         "type": "Microsoft.ContainerInstance/containerGroups",
         "apiVersion": "2021-03-01",
         "location": "[resourceGroup().location]",
         "properties": {
             "containers": [
                 {
-                    "name": "containerName",
+                    "name": "iothubux",
                     "properties": {
                         "image": "docker.io/ridomin/iothubux:latest",
                         "ports": [
@@ -42,6 +42,10 @@
                             {
                                 "name":"EVENTHUB_CONSUMER_GROUP",
                                 "value" : "[parameters('eventHubConsumerGroup')]"
+                            },
+                            {
+                                "name" : "PORT",
+                                "value" : "80"
                             }
                         ],
                         "resources": {
