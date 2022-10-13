@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "iotHubConnectionString" : {
+            "type": "securestring",
+            "metadata" : {
+                "description" : "IoT Hub connection string"
+            }
+        },
+        "eventHubConsumerGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "Consumer Group to read values from"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [{
+        "name": "containerGroup1",
+        "type": "Microsoft.ContainerInstance/containerGroups",
+        "apiVersion": "2021-03-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+            "containers": [
+                {
+                    "name": "containerName",
+                    "properties": {
+                        "image": "docker.io/ridomin/iothubux:latest",
+                        "ports": [
+                            {
+                                "port": 80
+                            }
+                        ],
+                        "environmentVariables": [
+                            {
+                                "name": "IOTHUB_CONNECTION_STRING",
+                                "secureValue" : "[parameters('iotHubConnectionString')]"
+                            },
+                            {
+                                "name":"EVENTHUB_CONSUMER_GROUP",
+                                "value" : "[parameters('eventHubConsumerGroup')]"
+                            }
+                        ],
+                        "resources": {
+                            "requests": {
+                                "cpu": 1,
+                                "memoryInGB": 1
+                            }
+                        }
+                    }
+                }
+            ],
+            "osType": "Linux",
+            "ipAddress": {
+                "type": "Public",
+                "dnsNameLabel" : "iothubux-",
+                "ports": [
+                    {
+                        "protocol": "TCP",
+                        "port": 80
+                    }
+                ]
+            }
+        }
+    }],
+    "outputs": {}
+}
