@@ -60,7 +60,7 @@
             "osType": "Linux",
             "ipAddress": {
                 "type": "Public",
-                "dnsNameLabel" : "iothubux",
+                "dnsNameLabel" : "[concat('iothubux', add(copyIndex(), 1))]",
                 "ports": [
                     {
                         "protocol": "TCP",
