@@ -11,12 +11,12 @@ This repo is published in the docker hub registry as `ridomin/iothubux:latest'
 To deploy locally use:
 
 ```bash
-IOT_HUB_CONNECTIONSTRING="<your iot hub connection string"
+IOT_HUB_CONNECTION_STRING="<your iot hub connection string"
 EVENTHUB_CONSUMER_GROUP="<EH consumer group" # defaults to $Default
 PORT="<PORT>" # defaults to 3000
 docker run -it --rm -p 80:80 \
   -e PORT=$PORT -e \
-  -e IOT_HUB_CONNECTIONSTRING="$IOT_HUB_CONNECTIONSTRING" \
+  -e IOT_HUB_CONNECTION_STRING="$IOT_HUB_CONNECTIONSTRING" \
   -e EVENTHUB_CONSUMER_GROUP="$Default" \
   ridomin/iothubux:latest
 ```
