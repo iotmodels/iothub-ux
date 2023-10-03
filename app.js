@@ -15,7 +15,7 @@ const connectionString = process.env.IOTHUB_CONNECTION_STRING
 const eventHubConsumerGroup = process.env.EVENTHUB_CONSUMER_GROUP || '$Default'
 
 if (!connectionString || connectionString.length < 10) {
-  console.error('IOTHUB_CONNECTION_STRING not found')
+  console.error('IOTHUB_CONNECTION_STRING not found ' + connectionString)
   exit()
 }
 

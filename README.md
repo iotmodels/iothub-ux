@@ -25,8 +25,12 @@ docker run -it --rm -p 80:80 \
 
 Assuming you have Node/NPM installed:
 
-```
-export IOT_HUB_CONNECTIONSTRING="<your iot hub connection string"
+```bash
+export IOTHUB_CONNECTIONSTRING="<your iot hub connection string"
 node app.js
+```
+
+```powershell
+$env:IOTHUB_CONNECTIONSTRING="<your iot hub connection string" ; node app.js
 ```
 
